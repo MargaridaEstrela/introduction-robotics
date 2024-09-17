@@ -1,7 +1,8 @@
 <launch>
   <!-- Arguments -->
   <arg name="model" default="waffle_pi"/>
-  <arg name="map_file" default="/home/rods/IRob/turtlebot3/src/turtlebot3_datasets-master/data/map.yaml"/>
+  <arg name="workspace" default="$(find turtlebot3_datasets)"/>
+  <arg name="map_file" default="$(arg workspace)/data/map.yaml"/>
   <arg name="bag_name" default="fixed_slam_easy"/>
 
   <!-- Turtlebot3 -->
@@ -53,6 +54,14 @@
        false, false, false,
        false, false, false]</rosparam>
     <param name="imu0_relative" value="true"/>
+    <param name="pose0" value="posegt" />
+    <rosparam param="pose0_config">
+      [true, true, false, 
+       false, false, true,
+       true, true, false,
+       false, false, true,
+       false, false, false]</rosparam>
+    <param name="pose0_relative" value="false"/>
   </node>
 
   <!-- AMCL-->
@@ -66,6 +75,6 @@
 
   <!-- rviz -->
   <!-- <node pkg="rviz" type="rviz" name="rviz" required="true" args= "-d /home/rods/IRob/turtlebot3/src/turtlebot3_datasets-master/turtlebot3_visualize_localization_sim.rviz"/> -->
-  <node pkg="rviz" type="rviz" name="rviz" required="true" args= "-d /home/rods/IRob/turtlebot3/src/turtlebot3_datasets-master/markers.rviz"/>
+  <node pkg="rviz" type="rviz" name="rviz" required="true" args= "-d $(arg workspace)/markers.rviz"/>
 
 </launch>

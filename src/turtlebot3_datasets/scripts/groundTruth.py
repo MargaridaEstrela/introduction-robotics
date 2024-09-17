@@ -2,6 +2,7 @@
 import rospy
 from tf2_msgs.msg import TFMessage
 from visualization_msgs.msg import Marker
+from geometry_msgs.msg import PoseWithCovarianceStamped
 
 
 class GroundTruth:
@@ -9,9 +10,11 @@ class GroundTruth:
         rospy.init_node('GroundTruth')
         self.prevTime = -1
         self.pub = rospy.Publisher('ground', Marker, queue_size=10)
+        self.pub_pose = rospy.Publisher(
+            'posegt', PoseWithCovarianceStamped, queue_size=10)
         rospy.Subscriber('/tf', TFMessage, self.Callback)
 
-    def DefineMarker(self, msg):
+    def PublishMarker(self, msg):
         marker = Marker()
         marker.header.frame_id = "mocap"
         marker.header.stamp = msg.header.stamp
@@ -19,23 +22,29 @@ class GroundTruth:
         marker.action = Marker.ADD
         marker.pose.position = msg.transform.translation
         marker.pose.orientation = msg.transform.rotation
-        marker.scale.x = 0.1
-        marker.scale.y = 0.05
-        marker.scale.z = 0.1
-        marker.color.r = 0
-        marker.color.g = 0.8
-        marker.color.b = 0.3
-        marker.color.a = 0.8
-        return marker
+        # scale
+        marker.scale.x, marker.scale.y, marker.scale.z = 0.1, 0.05, 0.1
+        # color
+        marker.color.r, marker.color.g, marker.color.b, marker.color.a = 0, 0.8, 0.3, 0.8
+
+        self.pub.publish(marker)
+
+    def PublishPose(self, msg):
+        pose = PoseWithCovarianceStamped()
+        pose.header.frame_id = "mocap"
+        pose.header.stamp = msg.header.stamp
+        pose.pose.pose.position = msg.transform.translation
+        pose.pose.pose.orientation = msg.transform.rotation
+        self.pub_pose.publish(pose)
 
     def Callback(self, msg):
         for msg in msg.transforms:
             if msg.child_frame_id == "mocap_laser_link":
                 currentTime = msg.header.stamp.secs + msg.header.stamp.nsecs * 1e-9
                 if currentTime - self.prevTime >= 1:
-                    marker = self.DefineMarker(msg)
+                    self.PublishMarker(msg)
+                    self.PublishPose(msg)
                     self.prevTime = currentTime
-                    self.pub.publish(marker)
 
     def initialize(self):
         rospy.spin()
