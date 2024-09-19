@@ -3,3 +3,4 @@ devel
 .vscode
 src/turtlebot3_datasets/data
 .catkin_workspace
+.DS_Store
