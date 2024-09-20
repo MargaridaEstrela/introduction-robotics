@@ -1,0 +1,20 @@
+<launch>
+  <!-- Arguments -->
+  <arg name="model" default="waffle_pi"/>
+  <arg name="workspace" default="$(find turtlebot3_datasets)"/>
+  <arg name="map_file" default="$(arg workspace)/data/map_gmapping.yaml"/>
+
+  <!-- Launch TurtleBot3 in Gazebo -->
+  <include file="$(find turtlebot3_gazebo)/launch/turtlebot3_world.launch">
+    <arg name="model" value="$(arg model)" />
+  </include>
+
+  <!-- TurtleBot3 Navigation -->
+  <include file="$(find turtlebot3_navigation)/launch/turtlebot3_navigation.launch">
+    <arg name="map_file" value="$(arg map_file)" />
+  </include>
+
+  <!-- Publish initial pose -->
+  <node pkg="turtlebot3_datasets" type="pub_initial_pose.py" name="initial_pose_publisher" output="screen" />
+
+</launch>
