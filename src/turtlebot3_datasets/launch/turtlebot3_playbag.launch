@@ -32,10 +32,13 @@
   <node pkg="turtlebot3_datasets" type="poseGroundTruth.py" name="turtlebot3_groundtruth_pose"/>
 
   <!-- Groundtruth path -->
-  <node pkg="turtlebot3_datasets" type="pathGroundTruth.py" name="turtlebot3_groundtruth_path"/>
+  <node pkg="turtlebot3_datasets" type="pathGroundTruth.py" name="turtlebot3_groundtruth_path" />
 
   <!-- Estimated path -->
   <node pkg="turtlebot3_datasets" type="estimatedPath.py" name="turtlebot3_estimated_path"/>
+
+  <!-- Error Plot -->
+  <node pkg="turtlebot3_datasets" type="RealTimeErrorPlot.py" name="turtlebot3_error_plot" output = "screen"/>
 
   <!-- Position error publisher -->
 

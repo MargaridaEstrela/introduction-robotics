@@ -3,16 +3,17 @@ import rospy
 from tf2_msgs.msg import TFMessage
 from visualization_msgs.msg import Marker
 from geometry_msgs.msg import PoseWithCovarianceStamped
+from utils import TimeMsg
 
+TIME_INTERVAL_GT = 1
 
 class PoseGroundTruth:
     def __init__(self):
         rospy.init_node("PoseroundTruth")
         self.prevTime = -1
-        self.pub = rospy.Publisher("ground_truth", Marker, queue_size=10)
-        self.pub_pose = rospy.Publisher(
-            "pose_gt", PoseWithCovarianceStamped, queue_size=10
-        )
+        self.pub_gt = rospy.Publisher("ground_truth", PoseWithCovarianceStamped, queue_size=10)
+        self.pub_marker = rospy.Publisher("marker_gt", Marker, queue_size=10)
+        self.pub_pose = rospy.Publisher("pose_gt", PoseWithCovarianceStamped, queue_size=10)
         rospy.Subscriber("/tf", TFMessage, self.Callback)
 
     def PublishMarker(self, msg):
@@ -33,24 +34,26 @@ class PoseGroundTruth:
             0.8,
         )
 
-        self.pub.publish(marker)
+        self.pub_marker.publish(marker)
 
-    def PublishPose(self, msg):
+    def PublishPose(self, msg, publisher):
         pose = PoseWithCovarianceStamped()
         pose.header.frame_id = "mocap"
         pose.header.stamp = msg.header.stamp
         pose.pose.pose.position = msg.transform.translation
         pose.pose.pose.orientation = msg.transform.rotation
-        self.pub_pose.publish(pose)
+        publisher.publish(pose)
 
     def Callback(self, msg):
         for msg in msg.transforms:
             if msg.child_frame_id == "mocap_laser_link":
-                currentTime = msg.header.stamp.secs + msg.header.stamp.nsecs * 1e-9
-                if currentTime - self.prevTime >= 1:
+                currentTime = TimeMsg(msg)
+                if currentTime - self.prevTime >= TIME_INTERVAL_GT:
+                    self.PublishPose(msg, self.pub_pose)
                     self.PublishMarker(msg)
-                    self.PublishPose(msg)
                     self.prevTime = currentTime
+                    
+                self.PublishPose(msg, self.pub_gt)
 
     def initialize(self):
         rospy.spin()
