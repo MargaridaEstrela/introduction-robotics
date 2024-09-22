@@ -19,7 +19,11 @@ def InterpolatePosition(Time1, Time2, PosX, PosY):
 
 def PlotError(Time, Error):
     Time = Time - Time[0]  # Start time at 0
-    plt.plot(Time, Error)
+    _, ax = plt.subplots()
+    ax.plot(Time, Error)
+    ax.text(0.95, 0.95, f'Average Error: {np.mean(Error):.3f} m', transform=ax.transAxes,
+            verticalalignment='top', horizontalalignment='right',
+            bbox=dict(facecolor='white', alpha=0.5))
     plt.xlabel("Time (s)")
     plt.ylabel("Error (m)")
     plt.title("Error between Ground Truth and EKF")

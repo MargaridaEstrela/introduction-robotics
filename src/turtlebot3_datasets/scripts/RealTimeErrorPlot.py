@@ -21,6 +21,8 @@ class ErrorPlot:
         self.x_data = []
         self.y_data = []
         self.TotalError = 0.0
+        self.TotalMsgs = 0.0
+        self.AvgError = 0.0
         rospy.init_node('ErrorPlot')
         rospy.Subscriber('odometry/filtered', Odometry,
                          self.CallbackOdom, queue_size=1)
@@ -60,7 +62,11 @@ class ErrorPlot:
         ErrorDist = self.EuclideanDistance()
         self.x_data.append(TimeMsg(self.LastGT) - self.InitialTime)
         self.y_data.append(ErrorDist)
+
         self.TotalError += ErrorDist
+        self.TotalMsgs += 1
+        self.AvgError = self.TotalError / self.TotalMsgs
+
         self.LastOdom = None
         self.LastGT = None
 
@@ -73,7 +79,7 @@ class ErrorPlot:
         return self.y_data
 
     def GetError(self):
-        return self.TotalError
+        return self.AvgError
 
 
 if __name__ == '__main__':
@@ -83,15 +89,15 @@ if __name__ == '__main__':
     plt.xlabel("Time (s)")
     plt.ylabel("Error (m)")
     plt.title("Error between Ground Truth and EKF")
-    error_text = ax.text(0.05, 0.95, '', transform=ax.transAxes,
-                         verticalalignment='top', horizontalalignment='left',
+    error_text = ax.text(0.95, 0.95, '', transform=ax.transAxes,
+                         verticalalignment='top', horizontalalignment='right',
                          bbox=dict(facecolor='white', alpha=0.5))
     plt.show()
     plot = ErrorPlot()
     while not rospy.is_shutdown():
         line.set_xdata(plot.get_x_data())
         line.set_ydata(plot.get_y_data())
-        error_text.set_text(f"Current Error: {plot.GetError():.3f} m")
+        error_text.set_text(f"Average Error: {plot.GetError():.3f} m")
         ax.relim()
         ax.autoscale_view()
         plt.draw()

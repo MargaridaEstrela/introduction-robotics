@@ -5,6 +5,8 @@ from geometry_msgs.msg import PoseWithCovarianceStamped
 from utils import TimeMsg
 import numpy as np
 
+FILE_EXT_NAME = "OnlyGT"
+
 
 class SaveData:
     def __init__(self):
@@ -36,9 +38,9 @@ class SaveData:
         GtY = np.array(self.Gt["PosY"])
         GtTime = np.array(self.Gt["Time"])
 
-        np.savez_compressed('odometry_data.npz', PosX=OdomX,
+        np.savez_compressed('odometry_data' + FILE_EXT_NAME + '.npz', PosX=OdomX,
                             PosY=OdomY, Time=OdomTime)
-        np.savez_compressed('ground_truth_data.npz',
+        np.savez_compressed('ground_truth_data' + FILE_EXT_NAME + '.npz',
                             PosX=GtX, PosY=GtY, Time=GtTime)
 
         rospy.loginfo("Data saved")
