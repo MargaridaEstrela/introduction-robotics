@@ -11,8 +11,8 @@ from scipy.spatial.transform import Rotation as R
 
 class ErrorPlot:
     def __init__(self):
-        self.Translation = np.array([0.935, 1.34])
-        Quat = np.array([0.001, -0.003, 0.737, 0.676])
+        self.Translation = np.array([0.939, 1.275])
+        Quat = np.array([0.001, -0.003, 0.738, 0.675])
         self.Rotation = R.from_quat(Quat).as_matrix()[:2, :2]
         self.LastOdom = None
         self.LastGT = None

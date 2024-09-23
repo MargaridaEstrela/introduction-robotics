@@ -7,13 +7,16 @@ from utils import TimeMsg
 
 TIME_INTERVAL_GT = 1
 
+
 class PoseGroundTruth:
     def __init__(self):
         rospy.init_node("PoseroundTruth")
         self.prevTime = -1
-        self.pub_gt = rospy.Publisher("ground_truth", PoseWithCovarianceStamped, queue_size=10)
+        self.pub_gt = rospy.Publisher(
+            "ground_truth", PoseWithCovarianceStamped, queue_size=10)
         self.pub_marker = rospy.Publisher("marker_gt", Marker, queue_size=10)
-        self.pub_pose = rospy.Publisher("pose_gt", PoseWithCovarianceStamped, queue_size=10)
+        self.pub_pose = rospy.Publisher(
+            "pose_gt", PoseWithCovarianceStamped, queue_size=10)
         rospy.Subscriber("/tf", TFMessage, self.Callback)
 
     def PublishMarker(self, msg):
@@ -52,7 +55,7 @@ class PoseGroundTruth:
                     self.PublishPose(msg, self.pub_pose)
                     self.PublishMarker(msg)
                     self.prevTime = currentTime
-                    
+
                 self.PublishPose(msg, self.pub_gt)
 
     def initialize(self):

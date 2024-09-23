@@ -2,8 +2,8 @@
   <!-- Arguments -->
   <arg name="model" default="waffle_pi"/>
   <arg name="workspace" default="$(find turtlebot3_datasets)"/>
-  <arg name="map_file" default="$(arg workspace)/data/lsdc4.yaml"/>
-  <arg name="bag_name" default="lsdc4_23_09"/>
+  <arg name="map_file" default="$(arg workspace)/data/map.yaml"/>
+  <arg name="bag_name" default="fixed_slam_easy"/>
 
   <!-- Turtlebot3 -->
   <include file="$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch">
@@ -12,12 +12,9 @@
 
   <!-- Map server -->
   <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
-
   <!-- TF -->
-  <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="static_tf_mocap_to_map" args="0.935 1.34 -0.023 0.001 -0.003 0.737 0.676 mocap map" />
-  <node pkg="tf2_ros" type="static_transform_publisher" name="static_tf_mocap_to_odom" args="0.935 1.34 -0.023 0.001 -0.003 0.737 0.676 mocap odom" /> -->
-  <node pkg="tf2_ros" type="static_transform_publisher" name="" args="0 0 0 0 0 0 1 base_footprint base_link" />
-  <node pkg="tf2_ros" type="static_transform_publisher" name="" args="0 0 0 0 0 0 1 base_link base_scan" />
+  <node pkg="tf2_ros" type="static_transform_publisher" name="static_tf_mocap_to_map" args="0.939 1.275 0.119 0.001 -0.003 0.738 0.675 mocap map" />
+  <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="static_tf_mocap_to_odom" args="0.935 1.34 -0.023 0.001 -0.003 0.737 0.676 mocap odom" /> -->
   
   <!-- ROSBAG -->
   <param name="/use_sim_time" value="true"/>
@@ -41,10 +38,10 @@
   </node> -->
 
   <!-- Pose Estimation -->
-  <!-- <node pkg="turtlebot3_datasets" type="poseGroundTruth.py" name="turtlebot3_groundtruth_pose"/> -->
+  <node pkg="turtlebot3_datasets" type="poseGroundTruth.py" name="turtlebot3_groundtruth_pose"/>
 
   <!-- Groundtruth path -->
-  <!-- <node pkg="turtlebot3_datasets" type="pathGroundTruth.py" name="turtlebot3_groundtruth_path" /> -->
+  <node pkg="turtlebot3_datasets" type="pathGroundTruth.py" name="turtlebot3_groundtruth_path" />
 
   <!-- Estimated path -->
   <node pkg="turtlebot3_datasets" type="estimatedPath.py" name="turtlebot3_estimated_path"/>
@@ -53,7 +50,7 @@
   <!-- <node pkg="turtlebot3_datasets" type="amclPath.py" name="turtlebot3_amcl_path"/> -->
 
   <!-- Error Plot -->
-  <!-- <node pkg="turtlebot3_datasets" type="RealTimeErrorPlot.py" name="turtlebot3_error_plot" output = "screen"/> -->
+  <node pkg="turtlebot3_datasets" type="RealTimeErrorPlot.py" name="turtlebot3_error_plot" output = "screen"/>
 
   <!-- Position error publisher -->
 

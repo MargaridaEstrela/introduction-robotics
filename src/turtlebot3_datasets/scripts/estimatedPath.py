@@ -22,14 +22,15 @@ class EstimatedPathDrawer:
     def callback(self, msg):
         try:
             transform = self.tf_buffer.lookup_transform(
-                "mocap", "odom", rospy.Time(0), rospy.Duration(1.0)
+                "mocap", "map", rospy.Time(0), rospy.Duration(1.0)
             )
 
             pose = PoseStamped()
             pose.header.stamp = msg.header.stamp
             pose.pose = msg.pose.pose
 
-            transformed_pose = tf2_geometry_msgs.do_transform_pose(pose, transform)
+            transformed_pose = tf2_geometry_msgs.do_transform_pose(
+                pose, transform)
 
             self.path.poses.append(transformed_pose)
             self.path_pub.publish(self.path)

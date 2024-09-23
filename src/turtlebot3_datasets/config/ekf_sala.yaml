@@ -5,7 +5,7 @@ publish_tf: true
 map_frame: map
 odom_frame: odom
 base_link_frame: base_link
-world_frame: map
+world_frame: odom
 
 # Odometry input
 odom0: odom
@@ -25,11 +25,8 @@ imu0_config: [false, false, false,    # Position (x, y, z)
               false, false, false]    # Acceleration (x, y, z)
 imu0_relative: true
 
-# Pose input (ground truth)
-pose0: pose_gt
-pose0_config: [true, true, false,     # Position (x, y)
-              false, false, true,     # Orientation (yaw)
-              true, true, false,      # Linear velocity (x, y)
-              false, false, true,     # Angular velocity (yaw)
-              false, false, false]    # Acceleration
-pose0_relative: false
+initial_state: [-2.180, 1.496, 0.0,
+                0.0, 0.0, 0.0,
+                0.0, 0.0, 0.0,
+                0.0, 0.0, 0.0,
+                0.0, 0.0, 0.0]

@@ -4,7 +4,7 @@ import os
 from matplotlib import pyplot as plt
 from scipy.spatial.transform import Rotation as R
 
-PATH = '/home/rods/IRob/src/turtlebot3_datasets/scripts'
+PATH = '/home/rods/Desktop/IRob/src/turtlebot3_datasets/scripts/Error_Data'
 
 
 def EuclideanDistance(Position1, Position2):
@@ -30,8 +30,8 @@ def PlotError(Time, Error):
 
 
 def TransformPosition(PosX, PosY):
-    Translation = np.array([0.935, 1.34])
-    Quat = np.array([0.001, -0.003, 0.737, 0.676])
+    Translation = np.array([0.939, 1.275])
+    Quat = np.array([0.001, -0.003, 0.738, 0.675])
     Rotation = R.from_quat(Quat).as_matrix()[:2, :2]
 
     NewPos = []
