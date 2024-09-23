@@ -15,7 +15,9 @@
 
   <!-- TF -->
   <node pkg="tf2_ros" type="static_transform_publisher" name="static_tf_odom_to_map" args="0 0 0 0 0 0 odom map" />
-  
+  <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="static_tf_base_footprint_to_base_lin" args="0 0 0 0 0 0 1 base_footprint base_link" /> -->
+  <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="static_tf_base_link_to_base_scan" args="0 0 0 0 0 0 1 base_link base_scan" /> -->
+
   <!-- ROSBAG -->
   <param name="/use_sim_time" value="true"/>
   <node pkg="rosbag" type="play" name="rosbag_player" 
@@ -27,7 +29,7 @@
   </node> -->
 
   <!-- AMCL-->
-  <!-- <node pkg="amcl" type="amcl" name="amcl" output="screen">
+  <node pkg="amcl" type="amcl" name="amcl" output="screen">
     <param name="odom_frame_id" value="odom"/>
     <param name="odom_model_type" value="diff-corrected"/>
     <param name="base_frame_id" value="base_link"/>
@@ -35,9 +37,10 @@
     <param name="update_min_a" value="0.02"/>
     <param name="min_particles" value="500"/>
     <param name="max_particles" value="5000"/>
-    <param name="initial_pose_x" value="-2.180"/>
-    <param name="initial_pose_y" value="1.496"/>
-  </node> -->
+    <param name="initial_pose_x" value="-2.302"/>
+    <param name="initial_pose_y" value="1.300"/>
+    <param name="initial_pose_a" value="-3.054"/>
+  </node>
 
   <!-- Estimated path -->
   <!-- <node pkg="turtlebot3_datasets" type="estimatedPath.py" name="turtlebot3_estimated_path"/> -->

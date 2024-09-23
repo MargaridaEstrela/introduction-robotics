@@ -25,8 +25,8 @@ imu0_config: [false, false, false,    # Position (x, y, z)
               false, false, false]    # Acceleration (x, y, z)
 imu0_relative: true
 
-initial_state: [-2.180, 1.496, 0.0,
-                0.0, 0.0, 0.0,
-                0.0, 0.0, 0.0,
-                0.0, 0.0, 0.0,
-                0.0, 0.0, 0.0]
+initial_state: [-2.302, 1.300, 0.0,   # Position (x, y, z)
+                0.0, 0.0, -3.054,     # Orientation (roll, pitch, yaw)
+                0.0, 0.0, 0.0,        # Linear velocity (x, y, z)
+                0.0, 0.0, 0.0,        # Angular velocity (roll, pitch, yaw)
+                0.0, 0.0, 0.0]        # Acceleration (x, y, z)
