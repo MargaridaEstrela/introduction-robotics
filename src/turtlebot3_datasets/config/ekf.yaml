@@ -33,3 +33,9 @@ pose0_config: [true, true, false,     # Position (x, y)
               false, false, true,     # Angular velocity (yaw)
               false, false, false]    # Acceleration
 pose0_relative: false
+
+# initial_state: [-1.9880502143006074, -0.4673281598919172, 0.0,
+#                 0.0, 0.0, 0.0,
+#                 0.0, 0.0, 0.0,
+#                 0.0, 0.0, 0.0,
+#                 0.0, 0.0, 0.0]

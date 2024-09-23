@@ -4,7 +4,7 @@ import os
 from matplotlib import pyplot as plt
 from scipy.spatial.transform import Rotation as R
 
-PATH = '/home/rods/Desktop/IRob/src/turtlebot3_datasets/scripts'
+PATH = '/home/rods/IRob/src/turtlebot3_datasets/scripts'
 
 
 def EuclideanDistance(Position1, Position2):
@@ -27,7 +27,6 @@ def PlotError(Time, Error):
     plt.xlabel("Time (s)")
     plt.ylabel("Error (m)")
     plt.title("Error between Ground Truth and EKF")
-    plt.show()
 
 
 def TransformPosition(PosX, PosY):
@@ -43,10 +42,7 @@ def TransformPosition(PosX, PosY):
     return np.array(NewPos).T
 
 
-def main():
-    DataGt = np.load(os.path.join(PATH, 'ground_truth_data.npz'))
-    DataEst = np.load(os.path.join(PATH, 'odometry_data.npz'))
-
+def Plot(DataGt, DataEst):
     PosGt = InterpolatePosition(
         DataEst["Time"], DataGt["Time"], DataGt["PosX"], DataGt["PosY"])
     PosEst = TransformPosition(DataEst["PosX"], DataEst["PosY"])
@@ -56,4 +52,13 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    Plot(np.load(os.path.join(PATH, 'ground_truth_data.npz')),
+         np.load(os.path.join(PATH, 'odometry_data.npz')))
+
+    Plot(np.load(os.path.join(PATH, 'ground_truth_dataNoGT.npz')),
+         np.load(os.path.join(PATH, 'odometry_dataNoGT.npz')))
+
+    Plot(np.load(os.path.join(PATH, 'ground_truth_dataOnlyGT.npz')),
+         np.load(os.path.join(PATH, 'odometry_dataOnlyGT.npz')))
+
+    plt.show()
