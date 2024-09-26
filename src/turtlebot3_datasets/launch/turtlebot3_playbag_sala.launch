@@ -24,9 +24,9 @@
           args="--clock $(find turtlebot3_datasets)/data/$(arg bag_name).bag"/>
 
   <!-- EKF robot localisation -->
-  <!-- <node pkg="robot_localization" type="ekf_localization_node" name="robot_localization_ekf_node_odom" clear_params="true" output="screen">
+  <node pkg="robot_localization" type="ekf_localization_node" name="robot_localization_ekf_node_odom" clear_params="true" output="screen">
     <rosparam command="load" file="$(find turtlebot3_datasets)/config/ekf_sala.yaml" />
-  </node> -->
+  </node>
 
   <!-- AMCL-->
   <node pkg="amcl" type="amcl" name="amcl" output="screen">
@@ -40,11 +40,12 @@
     <param name="initial_pose_x" value="-2.302"/>
     <param name="initial_pose_y" value="1.300"/>
     <param name="initial_pose_a" value="-3.054"/>
+    <param name="laser_max_beams" value="30"/>
   </node>
 
   <!-- Estimated path -->
   <!-- <node pkg="turtlebot3_datasets" type="estimatedPath.py" name="turtlebot3_estimated_path"/> -->
-
+  
   <!-- AMCL Path -->
   <node pkg="turtlebot3_datasets" type="amclPath.py" name="turtlebot3_amcl_path"/>
 

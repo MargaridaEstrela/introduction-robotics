@@ -29,7 +29,7 @@ imu0_relative: true
 pose0: pose_gt
 pose0_config: [true, true, false,     # Position (x, y)
               false, false, true,     # Orientation (yaw)
-              true, true, false,      # Linear velocity (x, y)
-              false, false, true,     # Angular velocity (yaw)
+              false, false, false,      # Linear velocity (x, y)
+              false, false, false,     # Angular velocity (yaw)
               false, false, false]    # Acceleration
 pose0_relative: false
