@@ -4,26 +4,30 @@ from nav_msgs.msg import Odometry
 from geometry_msgs.msg import PoseWithCovarianceStamped
 from utils import TimeMsg
 import numpy as np
+import os
 
-FILE_EXT_NAME = "OnlyGT"
+FILE_END_NAME = "OnlyGT"
 
 
 class SaveData:
     def __init__(self):
-        self.Odom = {"PosX": [], "PosY": [], "Time": []}
+        self.Estimation = {"PosX": [], "PosY": [],
+                           "Time": [], "CovX": [], "CovY": []}
         self.Gt = {"PosX": [], "PosY": [], "Time": []}
 
         rospy.init_node('SaveData')
 
         rospy.Subscriber('odometry/filtered', Odometry,
-                         self.CallbackOdom)
+                         self.CallbackEstimation)
         rospy.Subscriber('ground_truth', PoseWithCovarianceStamped,
                          self.CallbackGT)
 
-    def CallbackOdom(self, msg):
-        self.Odom["PosX"].append(msg.pose.pose.position.x)
-        self.Odom["PosY"].append(msg.pose.pose.position.y)
-        self.Odom["Time"].append(TimeMsg(msg))
+    def CallbackEstimation(self, msg):
+        self.Estimation["PosX"].append(msg.pose.pose.position.x)
+        self.Estimation["PosY"].append(msg.pose.pose.position.y)
+        self.Estimation["Time"].append(TimeMsg(msg))
+        self.Estimation["CovX"].append(msg.pose.covariance[0])
+        self.Estimation["CovY"].append(msg.pose.covariance[7])
 
     def CallbackGT(self, msg):
         self.Gt["PosX"].append(msg.pose.pose.position.x)
@@ -31,16 +35,20 @@ class SaveData:
         self.Gt["Time"].append(TimeMsg(msg))
 
     def save_data(self):
-        OdomX = np.array(self.Odom["PosX"])
-        OdomY = np.array(self.Odom["PosY"])
-        OdomTime = np.array(self.Odom["Time"])
+        EstimationX = np.array(self.Estimation["PosX"])
+        EstimationY = np.array(self.Estimation["PosY"])
+        EstimationTime = np.array(self.Estimation["Time"])
+        EstimationCovX = np.array(self.Estimation["CovX"])
+        EstimationCovY = np.array(self.Estimation["CovY"])
+
+        np.savez_compressed(os.path.join('Error_data', 'EKF_data_' + FILE_END_NAME + '.npz'), PosX=EstimationX,
+                            PosY=EstimationY, Time=EstimationTime, CovX=EstimationCovX, CovY=EstimationCovY)
+
         GtX = np.array(self.Gt["PosX"])
         GtY = np.array(self.Gt["PosY"])
         GtTime = np.array(self.Gt["Time"])
 
-        np.savez_compressed('odometry_data' + FILE_EXT_NAME + '.npz', PosX=OdomX,
-                            PosY=OdomY, Time=OdomTime)
-        np.savez_compressed('ground_truth_data' + FILE_EXT_NAME + '.npz',
+        np.savez_compressed(os.path.join('Error_data', 'ground_truth_data_' + FILE_END_NAME + '.npz'),
                             PosX=GtX, PosY=GtY, Time=GtTime)
 
         rospy.loginfo("Data saved")

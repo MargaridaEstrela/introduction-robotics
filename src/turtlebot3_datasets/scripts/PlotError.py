@@ -4,61 +4,89 @@ import os
 from matplotlib import pyplot as plt
 from scipy.spatial.transform import Rotation as R
 
-PATH = '/home/rods/Desktop/IRob/src/turtlebot3_datasets/scripts/Error_Data'
+PATH = '/home/rods/Desktop/IRob/src/turtlebot3_datasets/scripts/Error_data'
 
 
-def EuclideanDistance(Position1, Position2):
-    return np.linalg.norm(Position1 - Position2, axis=0)
+class ErrorPlot:
+    def __init__(self, Path, FileEndName, Title):
+        self.DataGt = np.load(os.path.join(PATH, 'ground_truth_data_' + FileEndName + '.npz'))
+        self.DataEst = np.load(os.path.join(PATH, 'EKF_data_' + FileEndName + '.npz'))
+        self.Title = Title
+        self.Time = self.DataEst["Time"] - self.DataEst["Time"][0]  # Start time at 0
 
+        self.Translation = np.array([0.939, 1.275])
 
-def InterpolatePosition(Time1, Time2, PosX, PosY):
-    PosXInterp = np.interp(Time1, Time2, PosX)
-    PosYInterp = np.interp(Time1, Time2, PosY)
-    return np.array([PosXInterp, PosYInterp])
+        Quat = np.array([0.001, -0.003, 0.738, 0.675])
+        self.Rotation = R.from_quat(Quat).as_matrix()[:2, :2]
+        # Interpolate the ground truth data to match the estimated data
+        self.InterpolatePosition()
+        self.TransformPosition()  # Transform the estimated data
 
+    def EuclideanDistance(self):
+        return np.linalg.norm(self.PosGt - self.PosEst, axis=0)
 
-def PlotError(Time, Error):
-    Time = Time - Time[0]  # Start time at 0
-    _, ax = plt.subplots()
-    ax.plot(Time, Error)
-    ax.text(0.95, 0.95, f'Average Error: {np.mean(Error):.3f} m', transform=ax.transAxes,
-            verticalalignment='top', horizontalalignment='right',
-            bbox=dict(facecolor='white', alpha=0.5))
-    plt.xlabel("Time (s)")
-    plt.ylabel("Error (m)")
-    plt.title("Error between Ground Truth and EKF")
+    def InterpolatePosition(self):
+        TimeEst = self.DataEst["Time"]
+        TimeGt = self.DataGt["Time"]
 
+        PosXInterp = np.interp(TimeEst, TimeGt, self.DataGt["PosX"])
+        PosYInterp = np.interp(TimeEst, TimeGt, self.DataGt["PosY"])
 
-def TransformPosition(PosX, PosY):
-    Translation = np.array([0.939, 1.275])
-    Quat = np.array([0.001, -0.003, 0.738, 0.675])
-    Rotation = R.from_quat(Quat).as_matrix()[:2, :2]
+        self.PosGt = np.array([PosXInterp, PosYInterp])
 
-    NewPos = []
-    for x, y in zip(PosX, PosY):
-        OrigPos = np.array([x, y])
-        NewPos.append(Rotation @ OrigPos + Translation)
+    def TransformPosition(self):
+        NewPos = []
+        for x, y in zip(self.DataEst["PosX"], self.DataEst["PosY"]):
+            OrigPos = np.array([x, y])
+            NewPos.append(self.Rotation @ OrigPos + self.Translation)
 
-    return np.array(NewPos).T
+        self.PosEst = np.array(NewPos).T
 
+    def PlotDist(self):
+        Error = self.EuclideanDistance()
 
-def Plot(DataGt, DataEst):
-    PosGt = InterpolatePosition(
-        DataEst["Time"], DataGt["Time"], DataGt["PosX"], DataGt["PosY"])
-    PosEst = TransformPosition(DataEst["PosX"], DataEst["PosY"])
-    print(PosEst.shape)
-    Error = EuclideanDistance(PosGt, PosEst)
-    PlotError(DataEst["Time"], Error)
+        _, ax = plt.subplots(figsize=(10, 6))
+        ax.plot(self.Time, Error, 'r')
+        plt.xlabel("Time (s)")
+        plt.ylabel("Error (m)")
+        plt.title("Pose Estimation Error: Ground Truth vs. EKF " + self.Title, fontsize=16)
+        plt.tight_layout()
+        plt.grid()
+        ax.text(0.95, 0.95, f'Average Error: {np.mean(Error):.3f} m', transform=ax.transAxes,
+                verticalalignment='top', horizontalalignment='right',
+                bbox=dict(facecolor='white', alpha=0.5))
+
+    def PlotCov(self):
+        Position = self.PosEst
+        Std = np.sqrt(np.vstack((self.DataEst["CovX"], self.DataEst["CovY"])))
+        fig, ax = plt.subplots(1, 2, figsize=(10, 6))
+        ax[0].plot(self.Time, Position[0], 'o', label='Position X')
+        ax[0].fill_between(self.Time, Position[0] - 2*Std[0], Position[0] + 2 *
+                           Std[0], alpha=0.2, label='95% Confidence Interval')
+        ax[0].legend()
+        ax[0].grid()
+        ax[1].plot(self.Time, Position[1], 'o', label='Position Y')
+        ax[1].fill_between(self.Time, Position[1] - 2*Std[1], Position[1] + 2 *
+                           Std[1], alpha=0.2, label='95% Confidence Interval')
+        ax[1].legend()
+        ax[1].grid()
+        plt.tight_layout(rect=[0, 0, 1, 0.95])
+        plt.xlabel("Time (s)")
+        plt.ylabel("Position (m)")
+        fig.suptitle("Estimated Position for EKF" + self.Title, fontsize=16)
 
 
 if __name__ == '__main__':
-    Plot(np.load(os.path.join(PATH, 'ground_truth_data.npz')),
-         np.load(os.path.join(PATH, 'odometry_data.npz')))
+    PlotNoGt = ErrorPlot(PATH, 'NoGT', Title='(No GT Updates)')
+    PlotNoGt.PlotDist()
+    PlotNoGt.PlotCov()
 
-    Plot(np.load(os.path.join(PATH, 'ground_truth_dataNoGT.npz')),
-         np.load(os.path.join(PATH, 'odometry_dataNoGT.npz')))
+    PlotComplete = ErrorPlot(PATH, 'Complete', Title='(With GT Updates)')
+    PlotComplete.PlotDist()
+    PlotComplete.PlotCov()
 
-    Plot(np.load(os.path.join(PATH, 'ground_truth_dataOnlyGT.npz')),
-         np.load(os.path.join(PATH, 'odometry_dataOnlyGT.npz')))
+    PlotOnlyGt = ErrorPlot(PATH, 'OnlyGT', Title='(Only GT Updates)')
+    PlotOnlyGt.PlotDist()
+    PlotOnlyGt.PlotCov()
 
     plt.show()
