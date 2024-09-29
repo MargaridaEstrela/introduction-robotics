@@ -14,7 +14,6 @@
   <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
   <!-- TF -->
   <node pkg="tf2_ros" type="static_transform_publisher" name="static_tf_mocap_to_map" args="0.939 1.275 0.119 0.001 -0.003 0.738 0.675 mocap map" />
-  <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="static_tf_mocap_to_odom" args="0.935 1.34 -0.023 0.001 -0.003 0.737 0.676 mocap odom" /> -->
   
   <!-- ROSBAG -->
   <param name="/use_sim_time" value="true"/>
@@ -27,15 +26,15 @@
   </node>
 
   <!-- AMCL-->
-  <!-- <node pkg="amcl" type="amcl" name="amcl" output="screen">
+  <node pkg="amcl" type="amcl" name="amcl" output="screen">
     <param name="odom_frame_id" value="odom"/>
     <param name="odom_model_type" value="diff-corrected"/>
     <param name="base_frame_id" value="base_link"/>
     <param name="update_min_d" value="0.01"/>
     <param name="update_min_a" value="0.02"/>
-    <param name="min_particles" value="500"/>
-    <param name="max_particles" value="5000"/>
-  </node> -->
+    <param name="min_particles" value="200"/>
+    <param name="max_particles" value="2000"/>
+  </node>
 
   <!-- Pose Estimation -->
   <node pkg="turtlebot3_datasets" type="poseGroundTruth.py" name="turtlebot3_groundtruth_pose"/>
@@ -47,12 +46,16 @@
   <node pkg="turtlebot3_datasets" type="estimatedPath.py" name="turtlebot3_estimated_path"/>
 
   <!-- AMCL Path -->
-  <!-- <node pkg="turtlebot3_datasets" type="amclPath.py" name="turtlebot3_amcl_path"/> -->
+  <node pkg="turtlebot3_datasets" type="amclPath.py" name="turtlebot3_amcl_path"/>
 
   <!-- Error Plot -->
-  <node pkg="turtlebot3_datasets" type="RealTimeErrorPlot.py" name="turtlebot3_error_plot" output = "screen"/>
+  <!-- <node pkg="turtlebot3_datasets" type="RealTimeErrorPlot.py" name="turtlebot3_error_plot" output = "screen"/> -->
 
-  <!-- Position error publisher -->
+  <!-- EKF error publisher -->
+  <node pkg="turtlebot3_datasets" type="ekf_gt_error.py" name="turtlebot3_ekf_error" output = "screen"/>
+
+  <!-- AMCL error publisher -->
+  <node pkg="turtlebot3_datasets" type="amcl_gt_error.py" name="turtlebot3_amcl_error" output = "screen"/>
 
   <!-- rviz -->
   <node pkg="rviz" type="rviz" name="rviz" required="true" args= "-d $(arg workspace)/markers.rviz"/>

@@ -15,8 +15,6 @@
 
   <!-- TF -->
   <node pkg="tf2_ros" type="static_transform_publisher" name="static_tf_odom_to_map" args="0 0 0 0 0 0 odom map" />
-  <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="static_tf_base_footprint_to_base_lin" args="0 0 0 0 0 0 1 base_footprint base_link" /> -->
-  <!-- <node pkg="tf2_ros" type="static_transform_publisher" name="static_tf_base_link_to_base_scan" args="0 0 0 0 0 0 1 base_link base_scan" /> -->
 
   <!-- ROSBAG -->
   <param name="/use_sim_time" value="true"/>
@@ -24,9 +22,9 @@
           args="--clock $(find turtlebot3_datasets)/data/$(arg bag_name).bag"/>
 
   <!-- EKF robot localisation -->
-  <node pkg="robot_localization" type="ekf_localization_node" name="robot_localization_ekf_node_odom" clear_params="true" output="screen">
+  <!-- <node pkg="robot_localization" type="ekf_localization_node" name="robot_localization_ekf_node_odom" clear_params="true" output="screen">
     <rosparam command="load" file="$(find turtlebot3_datasets)/config/ekf_sala.yaml" />
-  </node>
+  </node> -->
 
   <!-- AMCL-->
   <node pkg="amcl" type="amcl" name="amcl" output="screen">
@@ -52,7 +50,8 @@
   <!-- Error Plot -->
   <!-- <node pkg="turtlebot3_datasets" type="RealTimeErrorPlot.py" name="turtlebot3_error_plot" output = "screen"/> -->
 
-  <!-- Position error publisher -->
+  <!-- AMCL error publisher -->
+  <node pkg="turtlebot3_datasets" type="amcl_error.py" name="turtlebot3_amcl_error" output = "screen"/>
 
   <!-- rviz -->
   <node pkg="rviz" type="rviz" name="rviz" required="true" args= "-d $(arg workspace)/sala.rviz"/>
