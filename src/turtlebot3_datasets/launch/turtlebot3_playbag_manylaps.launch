@@ -2,8 +2,8 @@
   <!-- Arguments -->
   <arg name="model" default="waffle_pi"/>
   <arg name="workspace" default="$(find turtlebot3_datasets)"/>
-  <arg name="map_file" default="$(arg workspace)/data/lsdc4_2.yaml"/>
-  <arg name="bag_name" default="lsdc4_23_09"/>
+  <arg name="map_file" default="$(arg workspace)/data/many_laps.yaml"/>
+  <arg name="bag_name" default="many_laps"/>
 
   <!-- Turtlebot3 -->
   <include file="$(find turtlebot3_bringup)/launch/turtlebot3_remote.launch">
@@ -30,9 +30,9 @@
     <param name="update_min_a" value="0.02"/>
     <param name="min_particles" value="200"/>
     <param name="max_particles" value="1000"/>
-    <param name="initial_pose_x" value="-2.302"/>
-    <param name="initial_pose_y" value="1.300"/>
-    <param name="initial_pose_a" value="-3.054"/>
+    <param name="initial_pose_x" value="0"/>
+    <param name="initial_pose_y" value="0"/>
+    <param name="initial_pose_a" value="0"/>
     <param name="laser_max_beams" value="30"/>
   </node>
 

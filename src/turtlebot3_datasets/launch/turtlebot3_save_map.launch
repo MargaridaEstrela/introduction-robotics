@@ -1,0 +1,20 @@
+<launch>
+  <!-- Arguments for the model, workspace, map name, and bag file -->
+  <arg name="model" default="waffle_pi"/>
+  <arg name="workspace" default="$(find turtlebot3_datasets)"/>
+  <arg name="bag_name" default="many_laps"/>
+  <arg name="map_name" default="many_laps"/>
+
+  <!-- Use simulation time (needed for rosbag playback) -->
+  <param name="/use_sim_time" value="true"/>
+
+  <!-- Play the rosbag file -->
+  <node pkg="rosbag" type="play" name="rosbag_player" 
+        args="  --clock $(arg workspace)/data/$(arg bag_name).bag"/>
+
+  <!-- Run TurtleBot3 SLAM using Gmapping -->
+  <include file="$(find turtlebot3_slam)/launch/turtlebot3_slam.launch">
+    <arg name="slam_methods" value="gmapping"/>
+  </include>
+
+</launch>
