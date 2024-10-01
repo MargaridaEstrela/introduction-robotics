@@ -12,10 +12,7 @@
 
   <!-- Map server -->
   <node pkg="map_server" name="map_server" type="map_server" args="$(arg map_file)"/>
-
-  <!-- TF -->
-  <node pkg="tf2_ros" type="static_transform_publisher" name="static_tf_odom_to_map" args="0 0 0 0 0 0 odom map" />
-
+  
   <!-- ROSBAG -->
   <param name="/use_sim_time" value="true"/>
   <node pkg="rosbag" type="play" name="rosbag_player" 
@@ -28,8 +25,8 @@
     <param name="base_frame_id" value="base_link"/>
     <param name="update_min_d" value="0.01"/>
     <param name="update_min_a" value="0.02"/>
-    <param name="min_particles" value="200"/>
-    <param name="max_particles" value="1000"/>
+    <param name="min_particles" value="100"/>
+    <param name="max_particles" value="5000"/>
     <param name="initial_pose_x" value="0"/>
     <param name="initial_pose_y" value="0"/>
     <param name="initial_pose_a" value="0"/>
@@ -44,7 +41,7 @@
 
   <!-- AMCL error publisher -->
   <node pkg="turtlebot3_datasets" type="amcl_error.py" name="turtlebot3_amcl_error" output = "screen"/>
-
+  <node pkg="turtlebot3_datasets" type="amcl_cov.py" name="turtlebot3_amcl_cov" output = "screen"/>
   <!-- rviz -->
   <node pkg="rviz" type="rviz" name="rviz" required="true" args= "-d $(arg workspace)/sala.rviz"/>
 

@@ -49,7 +49,7 @@ class ErrorPlot:
         ax.plot(self.Time, Error, 'r')
         plt.xlabel("Time (s)")
         plt.ylabel("Error (m)")
-        plt.title("Pose Estimation Error: Ground Truth vs. EKF " + self.Title, fontsize=16)
+        plt.title("Position Estimation Error: Ground Truth vs EKF " + self.Title, fontsize=16)
         plt.tight_layout()
         plt.grid()
         ax.text(0.95, 0.95, f'Average Error: {np.mean(Error):.3f} m', transform=ax.transAxes,
