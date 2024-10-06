@@ -30,12 +30,10 @@ namespace rrt_planner {
         unsigned char cost = costmap_->getCost(mx, my);
 
         // Check if the point is in free space or near obstacles
-        if (cost == costmap_2d::FREE_SPACE) {
+        if (cost < 128) {
             return true;  // Free space
-        } else if (cost == costmap_2d::INSCRIBED_INFLATED_OBSTACLE || cost >= costmap_2d::LETHAL_OBSTACLE) {
-            return false;  // Obstacle or too close to obstacle
         } else {
-            return true;  // Safe inflation zone
+            return false;  // Obstacle or too close to obstacle
         }
     }
 

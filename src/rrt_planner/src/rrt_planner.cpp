@@ -35,13 +35,11 @@ namespace rrt_planner {
 
             if (!collision_dect_.obstacleBetween(nearest_node.pos, p_new)) {
                 createNewNode(p_new, nearest_node.node_id);
-
             } else {
                 continue;
             }
 
-            if(k > params_.min_num_nodes) {
-                
+            if (k > params_.min_num_nodes) {
                 if(computeDistance(p_new, goal_) <= params_.goal_tolerance){
                     ROS_INFO("Reached the goal within tolerance.");
                     return true;
@@ -57,37 +55,31 @@ namespace rrt_planner {
         /**************************
          * Implement your code here
          **************************/
+        
+        double distance;
+        Node nearest_node = nodes_[0];
+        double min_distance = computeDistance(point, nearest_node.pos);
 
-        double min_distance = computeDistance(point, nodes_[0].pos);
-        int nearest_node_id = 0;
-
-        for (size_t i = 1; i < nodes_.size(); i++) {
-            double distance = computeDistance(point, nodes_[i].pos);
+        for (int i = 1; i < nodes_.size(); i++) {
+            distance = computeDistance(point, nodes_[i].pos);
             if (distance < min_distance) {
                 min_distance = distance;
-                nearest_node_id = i;
+                nearest_node = nodes_[i];
             }
         }
 
-        return nearest_node_id;
+        return nearest_node.node_id;
 
     }
 
     void RRTPlanner::createNewNode(const double* pos, int parent_node_id) {
 
-        Node new_node;
-
         /**************************
          * Implement your code here
          **************************/
 
-        new_node.pos[0] = pos[0];
-        new_node.pos[1] = pos[1];
-        new_node.node_id = nodes_.size();
-        new_node.parent_id = parent_node_id;     
-
+        Node new_node(pos, nodes_.size(), parent_node_id);
         nodes_.emplace_back(new_node);
-        
     }
 
     double* RRTPlanner::sampleRandomPoint() {
