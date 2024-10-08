@@ -30,11 +30,7 @@ namespace rrt_planner {
         unsigned char cost = costmap_->getCost(mx, my);
 
         // Check if the point is in free space or near obstacles
-        if (cost < 128) {
-            return true;  // Free space
-        } else {
-            return false;  // Obstacle or too close to obstacle
-        }
+        return cost < 128;
     }
 
     bool CollisionDetector::obstacleBetween(const double* point_a, const double* point_b) {
