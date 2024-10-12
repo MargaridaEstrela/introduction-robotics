@@ -46,6 +46,11 @@
   </node>
   <!-- Amcl -->
   <node pkg="turtlebot3_datasets" type="amclPath.py" name="turtlebot3_amcl_path"/>
+
+  <!-- Navigation-->
+  <node pkg="rrt_planner" type="navigate.py" name="turtlebot3_navigation_path">
+  <rosparam file="$(find rrt_planner)/config/waypoints_sim.yaml" command="load" />
+  </node>
   <!-- rviz -->
-  <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find rrt_planner)/rviz/rrt_turtlebot_sim.rviz"/>
+  <!-- <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find rrt_planner)/rviz/rrt_turtlebot_sim.rviz"/> -->
 </launch>
