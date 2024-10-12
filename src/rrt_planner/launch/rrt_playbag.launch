@@ -4,15 +4,21 @@
   <arg name="map_file" default="$(find rrt_planner)/maps/gmapping_02.yaml"/>
   <arg name="bag_name" default="BagMelhor"/>
   
+  <include file="$(find turtlebot3_bringup)/launch/includes/description.launch.xml">
+    <arg name="model" value="$(arg model)" />
+  </include>
+
   <!-- ROSBAG -->
   <param name="/use_sim_time" value="true"/>
-  <node pkg="rosbag" type="play" name="rosbag_player" args="--clock $(find rrt_planner)/rosbags/$(arg bag_name).bag"/>
+  <node pkg="rosbag" type="play" name="rosbag_player" args="--pause --clock $(find rrt_planner)/rosbags/$(arg bag_name).bag"/>
 
   <!-- Amcl Path -->
   <node pkg="turtlebot3_datasets" type="amclPath.py" name="turtlebot3_amcl_path"/>
 
-  <!-- Path Length -->
-  <node pkg="rrt_planner" type="PathLength.py" name="turtlebot3_path_length" output='screen'/>
+  <!-- Path Metrics -->
+  <node pkg="rrt_planner" type="PathLength.py" name="turtlebot3_path_length" output='screen'/> 
+  
+  <node pkg="rrt_planner" type="CostPath.py" name="turtlebot3_cost_path" output='screen'/>
   <!-- rviz -->
   <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find rrt_planner)/rviz/rrt_turtlebot_real.rviz"/>
 </launch>
