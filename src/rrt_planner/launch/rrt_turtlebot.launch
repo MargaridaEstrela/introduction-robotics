@@ -44,7 +44,8 @@
     <remap from="cmd_vel" to="$(arg cmd_vel_topic)"/>
     <remap from="odom" to="$(arg odom_topic)"/>
   </node>
-
+  <!-- Amcl -->
+  <node pkg="turtlebot3_datasets" type="amclPath.py" name="turtlebot3_amcl_path"/>
   <!-- rviz -->
   <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find rrt_planner)/rviz/rrt_turtlebot_sim.rviz"/>
 </launch>

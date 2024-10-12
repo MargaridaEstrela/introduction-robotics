@@ -7,3 +7,6 @@ src/turtlebot3_datasets/data
 src/turtlebot3_datasets/scripts/__pycache__
 src/rrt_planner/logs
 src/rrt_planner/.catkin_tools
+.catkin_tools
+logs
+src/rrt_planner/rosbags
