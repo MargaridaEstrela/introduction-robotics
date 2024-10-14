@@ -34,14 +34,14 @@ pose0_config: [true, true, false,       # Position (x, y)
               false, false, false]      # Acceleration
 pose0_relative: false
 
-# # Odometry Measurement Noise Covariance (R)
+# Odometry Measurement Noise Covariance (R)
 odom0_covariance: [
-  0.15, 0,    0,    0,    0,    0,      # x
-  0,    0.15, 0,    0,    0,    0,      # y
+  0.25, 0,    0,    0,    0,    0,      # x
+  0,    0.25, 0,    0,    0,    0,      # y
   0,    0,    1e6, 0,    0,    0,       # z
   0,    0,    0,    1e6, 0,    0,       # roll
   0,    0,    0,    0,    1e6, 0,       # pitch
-  0,    0,    0,    0,    0,    0.001   # yaw
+  0,    0,    0,    0,    0,    0.25   # yaw
 ]
 
 # IMU Measurement Noise Covariance (R)
@@ -51,15 +51,15 @@ imu0_covariance: [
   0,    0,    1e6, 0,    0,    0,       # z
   0,    0,    0,    1e6, 0,    0,       # roll
   0,    0,    0,    0,    1e6, 0,       # pitch
-  0,    0,    0,    0,    0,    0.005   # yaw 
+  0,    0,    0,    0,    0,    0.25   # yaw 
 ]
 
 # # Pose Measurement Noise Covariance (R) for Ground Truth
 pose0_covariance: [
-  0.0005, 0,    0,    0,    0,    0,    # x
-  0,    0.0005, 0,    0,    0,    0,    # y
-  0,    0,    1e6, 0,    0,    0,       # z
-  0,    0,    0,    1e6, 0,    0,       # roll
-  0,    0,    0,    0,    1e6, 0,       # pitch
-  0,    0,    0,    0,    0,    0.005   # yaw
+  0.001, 0,      0,    0,    0,    0,        # x
+  0,      0.001, 0,    0,    0,    0,        # y
+  0,      0,      1e6,  0,    0,    0,        # z
+  0,      0,      0,    1e6,  0,    0,        # roll
+  0,      0,      0,    0,    1e6,  0,        # pitch
+  0,      0,      0,    0,    0,    0.001    # yaw
 ]

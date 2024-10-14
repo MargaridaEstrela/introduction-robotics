@@ -59,13 +59,13 @@ class ErrorPlot:
     def PlotCov(self):
         Position = self.PosEst
         Std = np.sqrt(np.vstack((self.DataEst["CovX"], self.DataEst["CovY"])))
-        fig, ax = plt.subplots(1, 2, figsize=(10, 6))
-        ax[0].plot(self.Time, Position[0], 'o', label='Position X')
+        fig, ax = plt.subplots(2, 1, figsize=(10, 6))
+        ax[0].plot(self.Time, Position[0], 'o', label='Position X', markersize=4)
         ax[0].fill_between(self.Time, Position[0] - 2*Std[0], Position[0] + 2 *
                            Std[0], alpha=0.2, label='95% Confidence Interval')
         ax[0].legend()
         ax[0].grid()
-        ax[1].plot(self.Time, Position[1], 'o', label='Position Y')
+        ax[1].plot(self.Time, Position[1], 'o', label='Position Y', markersize=4)
         ax[1].fill_between(self.Time, Position[1] - 2*Std[1], Position[1] + 2 *
                            Std[1], alpha=0.2, label='95% Confidence Interval')
         ax[1].legend()
@@ -86,6 +86,10 @@ if __name__ == '__main__':
     PlotComplete.PlotCov()
 
     PlotOnlyGt = ErrorPlot(PATH, 'OnlyGT', Title='(Only GT Updates)')
+    PlotOnlyGt.PlotDist()
+    PlotOnlyGt.PlotCov()
+
+    PlotOnlyGt = ErrorPlot(PATH, 'NewCov', Title='(Fine Tuned Covariance With GT Updates)')
     PlotOnlyGt.PlotDist()
     PlotOnlyGt.PlotCov()
 

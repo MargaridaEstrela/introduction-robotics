@@ -6,7 +6,7 @@ from utils import TimeMsg
 import numpy as np
 import os
 
-FILE_END_NAME = "OnlyGT"
+FILE_END_NAME = "NewCov"
 
 
 class SaveData:
