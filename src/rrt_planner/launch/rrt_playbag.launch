@@ -1,8 +1,7 @@
- <launch>
+<launch>
   <!-- Arguments -->
   <arg name="model" default="waffle_pi"/>
-  <arg name="map_file" default="$(find rrt_planner)/maps/gmapping_02.yaml"/>
-  <arg name="bag_name" default="BagMelhor"/>
+  <arg name="bag_name" default="rrt"/>
   
   <include file="$(find turtlebot3_bringup)/launch/includes/description.launch.xml">
     <arg name="model" value="$(arg model)" />
@@ -16,9 +15,10 @@
   <node pkg="turtlebot3_datasets" type="amclPath.py" name="turtlebot3_amcl_path"/>
 
   <!-- Path Metrics -->
-  <node pkg="rrt_planner" type="PathLength.py" name="turtlebot3_path_length" output='screen'/> 
+  <node pkg="rrt_planner" type="PathMetrics.py" name="turtlebot3_path_metrics" output='screen'/> 
   
-  <node pkg="rrt_planner" type="CostPath.py" name="turtlebot3_cost_path" output='screen'/>
+  <!-- <node pkg="rrt_planner" type="CostPath.py" name="turtlebot3_cost_path" output='screen'/> -->
+  
   <!-- rviz -->
   <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find rrt_planner)/rviz/rrt_turtlebot_real.rviz"/>
 </launch>

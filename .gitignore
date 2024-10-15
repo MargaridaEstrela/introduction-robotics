@@ -10,3 +10,5 @@ src/rrt_planner/.catkin_tools
 .catkin_tools
 logs
 src/rrt_planner/rosbags
+*.png
+__pycache__
