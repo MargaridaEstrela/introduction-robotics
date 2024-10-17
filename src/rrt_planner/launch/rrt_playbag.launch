@@ -15,9 +15,9 @@
   <node pkg="turtlebot3_datasets" type="amclPath.py" name="turtlebot3_amcl_path"/>
 
   <!-- Path Metrics -->
-  <node pkg="rrt_planner" type="PathMetrics.py" name="turtlebot3_path_metrics" output='screen'/> 
+  <node pkg="rrt_planner" type="PathMetrics_$(arg bag_name).py" name="turtlebot3_path_metrics" output='screen'/> 
   
-  <!-- <node pkg="rrt_planner" type="CostPath.py" name="turtlebot3_cost_path" output='screen'/> -->
+  <node pkg="rrt_planner" type="CostPath.py" name="turtlebot3_cost_path" output='screen'/>
   
   <!-- rviz -->
   <node pkg="rviz" type="rviz" name="rviz" required="true" args="-d $(find rrt_planner)/rviz/rrt_turtlebot_real.rviz"/>
