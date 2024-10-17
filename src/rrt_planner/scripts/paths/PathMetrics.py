@@ -166,27 +166,34 @@ class PathMetrics:
         indicates a smoother path, while a higher value indicates more frequent
         or sharper turns.
         """
-        if target_num_points and len(poses) > 2:
-            poses = self.interpolate_poses(poses, target_num_points)
 
-        angles = []
-
+        curvatures = []
         for i in range(1, len(poses) - 1):
-            # Get the positions of three consecutive poses (p0, p1, p2)
             p0 = poses[i - 1].pose.position
             p1 = poses[i].pose.position
             p2 = poses[i + 1].pose.position
-            v1 = [p1.x - p0.x, p1.y - p0.y]
-            v2 = [p2.x - p1.x, p2.y - p1.y]
-            angle = math.atan2(v2[1], v2[0]) - math.atan2(v1[1], v1[0])
-            angles.append(angle)
 
-        # A lower value indicates a smoother path
-        return (
-            math.sqrt(sum([a**2 for a in angles]) / len(angles))
-            if len(angles) > 0
-            else 0.0
-        )
+            # Compute distances between consecutive points
+            d01 = math.sqrt((p1.x - p0.x) ** 2 + (p1.y - p0.y) ** 2)
+            d12 = math.sqrt((p2.x - p1.x) ** 2 + (p2.y - p1.y) ** 2)
+            d02 = math.sqrt((p2.x - p0.x) ** 2 + (p2.y - p0.y) ** 2)
+
+            # Calculate the curvature using the formula:
+            # curvature = 4 * (area of triangle formed by p0, p1, p2) / (d01 * d12 * d02)
+            # Area of the triangle = 0.5 * |p0.x(p1.y - p2.y) + p1.x(p2.y - p0.y) + p2.x(p0.y - p1.y)|
+            area = (
+                abs(p0.x * (p1.y - p2.y) + p1.x * (p2.y - p0.y) + p2.x * (p0.y - p1.y))
+                / 2.0
+            )
+
+            if d01 * d12 * d02 != 0:
+                curvature = 4 * area / (d01 * d12 * d02)
+            else:
+                curvature = 0
+
+            curvatures.append(curvature)
+
+        return sum(curvatures) / len(curvatures) if curvatures else 0.0
 
     def average_deviation(self, rrt_poses, amcl_poses):
         """
@@ -210,14 +217,17 @@ class PathMetrics:
         dist_amcl = self.distance(self.amcl_poses)
         dist_amcl_adjusted = dist_amcl - self.discard_distance
 
-        # num_points = min(len(self.rrt_poses), len(self.amcl_poses))
+        rospy.loginfo(f"RRT Path Points: {len(self.rrt_poses)}")
+        rospy.loginfo(f"AMCL Path Points: {len(self.amcl_poses)}")
 
-        # rrt_interpolated = self.interpolate_poses(
-        #     self.rrt_poses, num_points, pose_type="PoseStamped"
-        # )
-        # amcl_interpolated = self.interpolate_poses(
-        #     self.amcl, num_points, pose_type="PoseWithCovarianceStamped"
-        # )
+        num_points = min(len(self.rrt_poses), len(self.amcl_poses))
+
+        rrt_interpolated = self.interpolate_poses(
+            self.rrt_poses, num_points, pose_type="PoseStamped"
+        )
+        amcl_interpolated = self.interpolate_poses(
+            self.amcl, num_points, pose_type="PoseWithCovarianceStamped"
+        )
 
         # amcl_subsampled = self.subsample_poses(self.amcl_poses, num_points)
         # rrt_subsampled = self.subsample_poses(self.rrt_poses, num_points)
@@ -225,7 +235,11 @@ class PathMetrics:
         smoothness_rrt = self.path_smoothness(self.rrt_poses)
         smoothness_amcl = self.path_smoothness(self.amcl_poses)
 
+        # smoothness_rrt = self.path_smoothness(rrt_interpolated)
+        # smoothness_amcl = self.path_smoothness(amcl_interpolated)
+
         deviation = self.average_deviation(self.rrt_poses, self.amcl_poses)
+        deviation = self.average_deviation(rrt_interpolated, amcl_interpolated)
 
         if self.rrt_paths_count == 1:
             rospy.loginfo(
@@ -242,13 +256,13 @@ class PathMetrics:
         self.goal_reached = False
 
         rospy.loginfo(f"AMCL Path Length: {dist_amcl_adjusted:.3f} meters")
-        # rospy.loginfo(f"AMCL Path Smoothness: {smoothness_amcl:.3f}")
-        # rospy.loginfo(
-        #     f"Average Deviation between RRT and AMCL paths: {deviation:.3f} meters"
-        # )
+        rospy.loginfo(f"AMCL Path Smoothness: {smoothness_amcl:.3f}")
+        rospy.loginfo(
+            f"Average Deviation between RRT and AMCL paths: {deviation:.3f} meters"
+        )
 
         rospy.loginfo(f"RRT Path Length: {dist_rrt:.3f} meters")
-        # rospy.loginfo(f"RRT Path Smoothness: {smoothness_rrt:.3f}")
+        rospy.loginfo(f"RRT Path Smoothness: {smoothness_rrt:.3f}")
 
         rospy.loginfo("################################")
 
