@@ -9,7 +9,7 @@
 
   <!-- ROSBAG -->
   <param name="/use_sim_time" value="true"/>
-  <node pkg="rosbag" type="play" name="rosbag_player" args="--pause --clock $(find rrt_planner)/rosbags/$(arg bag_name).bag"/>
+  <node pkg="rosbag" type="play" name="rosbag_player" args="--clock $(find rrt_planner)/rosbags/$(arg bag_name).bag"/>
 
   <!-- Amcl Path -->
   <node pkg="turtlebot3_datasets" type="amclPath.py" name="turtlebot3_amcl_path"/>

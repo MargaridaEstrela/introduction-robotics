@@ -76,10 +76,10 @@ class AmclPlotCov():
 
 
 if __name__ == '__main__':
-    if SAVEDATA:
+    if SAVEDATA:  # Not needed anymore since we save everything through plotjuggler
         AmclPlotCov = AmclPlotCov()
         AmclPlotCov.run()
     else:
         plot = AmclPlotCov()
-        plot.load('/home/rods/Desktop/IRob/plots/Cov_amcl.csv')
+        plot.load('/home/rods/IRob/plots/Cov_amcl_dataset_update_fix.csv')
         plot.PlotCov()
