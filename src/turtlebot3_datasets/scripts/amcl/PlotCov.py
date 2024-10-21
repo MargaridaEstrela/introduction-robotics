@@ -43,20 +43,30 @@ class AmclPlotCov():
 
     def PlotCov(self):
         fig, ax = plt.subplots(2, 1, figsize=(10, 6))
-        ax[0].plot(self.time, self.position_x[:, 0], 'o', label='Position X')
+
+        # Plot Position X with 95% Confidence Interval
+        ax[0].plot(self.time, self.position_x[:, 0], 'o', label='Estimated X Position')
         ax[0].fill_between(self.time, self.position_x[:, 2], self.position_x[:, 1],
-                           alpha=0.2, label='95% Confidence Interval')
+                           alpha=0.2, label='95% Confidence Interval for X')
+        ax[0].set_ylabel('Position X (m)')
+        # Plot between 0 and 1
+        ax[0].set_ylim([-1.5, 2])
         ax[0].legend()
         ax[0].grid()
-        ax[1].plot(self.time, self.position_y[:, 0], 'o', label='Position Y')
+
+        # Plot Position Y with 95% Confidence Interval
+        ax[1].plot(self.time, self.position_y[:, 0], 'o', label='Estimated Y Position')
         ax[1].fill_between(self.time, self.position_y[:, 2], self.position_y[:, 1],
-                           alpha=0.2, label='95% Confidence Interval')
+                           alpha=0.2, label='95% Confidence Interval for Y')
+        ax[1].set_ylabel('Position Y (m)')
+        ax[1].set_ylim([-1.5, 2])
         ax[1].legend()
         ax[1].grid()
+
+        # General plot adjustments
         plt.tight_layout(rect=[0, 0, 1, 0.95])
         plt.xlabel("Time (s)")
-        plt.ylabel("Position (m)")
-        fig.suptitle("Estimated Position for AMCL", fontsize=16)
+        # fig.suptitle("Estimated Position for AMCL with Confidence Intervals", fontsize=16)
         plt.show()
 
     def load(self, filepath):
@@ -81,5 +91,5 @@ if __name__ == '__main__':
         AmclPlotCov.run()
     else:
         plot = AmclPlotCov()
-        plot.load('/home/rods/IRob/plots/Cov_amcl_dataset_update_fix.csv')
+        plot.load('/home/rods/Desktop/IRob/plots/Cov_amcl_dataset_update_fix.csv')
         plot.PlotCov()

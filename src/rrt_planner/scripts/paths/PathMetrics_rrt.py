@@ -213,7 +213,7 @@ class PathMetrics:
             )
         else:
             rospy.loginfo(
-                f"Goal {self.current_waypoint_index} reached after replanning."
+                f"Goal {self.current_waypoint_index} reached after replanning {self.rrt_paths_count - 1} times"
             )
 
         num_points = min(len(self.rrt_poses), len(self.amcl_poses))

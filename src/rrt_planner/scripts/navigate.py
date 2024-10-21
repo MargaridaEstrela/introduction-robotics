@@ -24,6 +24,7 @@ class Navigate():
     def run(self):
         waypoints = rospy.get_param('~waypoints', [])
         for waypoint in waypoints:
+            rospy.sleep(1)
             result = self.move_to_goal(waypoint)
             rospy.loginfo(result)
 
@@ -31,4 +32,3 @@ class Navigate():
 if __name__ == '__main__':
     nav = Navigate()
     nav.run()
-

@@ -8,8 +8,10 @@ import matplotlib.pyplot as plt
 class PathLength:
     def __init__(self):
         rospy.init_node('path_length')
-        rospy.Subscriber('/move_base/RRTPlannerROS/global_plan', Path, self.path_callback)
         rospy.Subscriber('/move_base/global_costmap/costmap', OccupancyGrid, self.save_map)
+        # rospy.Subscriber('/move_base/RRTPlannerROS/global_plan', Path, self.path_callback)
+        rospy.Subscriber('/move_base/NavfnROS/plan', Path, self.path_callback)
+
         self.map = None
 
     def save_map(self, msg):
