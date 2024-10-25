@@ -21,7 +21,6 @@
   <!-- AMCL-->
   <node pkg="amcl" type="amcl" name="amcl" output="screen">
     <param name="odom_frame_id" value="odom"/>
-    <param name="odom_model_type" value="diff-corrected"/>
     <param name="base_frame_id" value="base_link"/>
     <param name="update_min_d" value="0.01"/>
     <param name="update_min_a" value="0.02"/>
@@ -30,14 +29,15 @@
     <param name="initial_pose_x" value="-2.302"/>
     <param name="initial_pose_y" value="1.300"/>
     <param name="initial_pose_a" value="-3.054"/>
-    <param name="laser_max_beams" value="30"/>
+
+    <!-- Uncomment to see the particles more dispersed -->
+    <!-- <param name="initial_cov_xx" value="1.0"/>
+    <param name="initial_cov_yy" value="1.0"/>
+    <param name="initial_cov_aa" value="6.28"/> -->
   </node>
 
   <!-- AMCL Path -->
   <node pkg="turtlebot3_datasets" type="amclPath.py" name="turtlebot3_amcl_path"/>
-
-  <!-- Error Plot -->
-  <!-- <node pkg="turtlebot3_datasets" type="RealTimeErrorPlot.py" name="turtlebot3_error_plot" output = "screen"/> -->
 
   <!-- AMCL error publisher -->
   <node pkg="turtlebot3_datasets" type="amcl_error.py" name="turtlebot3_amcl_error" output = "screen"/>
